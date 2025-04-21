@@ -24,7 +24,6 @@ class Cliente {
     }
 }
 
-// Classe Pet
 class Pet {
     private String nome;
     private String especie;
@@ -47,7 +46,6 @@ class Pet {
     public double getPeso() { return peso; }
 }
 
-// Classe abstrata Servico
 abstract class Servico {
     protected String nome;
     protected double preco;
