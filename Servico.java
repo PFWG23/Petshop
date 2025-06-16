@@ -1,22 +1,43 @@
-//trabalho de João Möller, Patrick Gomes e Renato Amaral 
+//Trabalho de Programação - João Möller, Patrick Gomes e Renato Amaral 
+//Classe abstrata para os serviços do pet shop
+//O professor explicou que classe abstrata é como um "molde" para outras classes
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public abstract class Servico {
-    protected String nome;
-    protected double preco;
-    protected Date dataAgendada;
-
-    public Servico(String nome, double preco, Date dataAgendada) {
-        this.nome = nome;
-        this.preco = preco;
-        this.dataAgendada = dataAgendada;
+    // Atributos que todos os serviços vão ter
+    protected String nomeServico; // protected permite que as classes filhas acessem
+    protected double precoServico;
+    protected Date dataAgendamento;
+    
+    // Construtor da classe pai
+    public Servico(String nome, double preco, Date data) {
+        this.nomeServico = nome;
+        this.precoServico = preco;
+        this.dataAgendamento = data;
     }
-
-    public String getNome() { return nome; }
-    public double getPreco() { return preco; }
-    public Date getDataAgendada() { return dataAgendada; }
+    
+    // Métodos getter básicos
+    public String getNome() { 
+        return nomeServico; 
+    }
+    
+    public double getPreco() { 
+        return precoServico; 
+    }
+    
+    public Date getDataAgendada() { 
+        return dataAgendamento; 
+    }
+    
+    // Método para formatar a data de um jeito mais bonito
     public String getDataFormatada() {
-        return new SimpleDateFormat("dd/MM/yyyy").format(dataAgendada);
+        SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+        return formatador.format(dataAgendamento);
+    }
+    
+    // Método para mostrar informações do serviço
+    public String getInformacaoCompleta() {
+        return nomeServico + " - R$ " + precoServico + " - " + getDataFormatada();
     }
 }
