@@ -1,1 +1,32 @@
+# Arquivos compilados Java
 *.class
+*.jar
+*.war
+*.ear
+
+# Pasta de build
+build/
+out/
+target/
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak

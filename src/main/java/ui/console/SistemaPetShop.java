@@ -1,8 +1,11 @@
 //Trabalho de Programação - João Möller, Patrick Gomes e Renato Amaral 
 //Sistema principal do Pet Shop - versão console
 //Esta é a versão original que fizemos primeiro, antes das interfaces gráficas
+package ui.console;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
+import model.*;
 
 public class SistemaPetShop {
     // Scanner global para ler entrada do usuário
@@ -80,7 +83,7 @@ public class SistemaPetShop {
         Cliente novoCliente = new Cliente(nomeCliente, telefoneCliente, emailCliente);
         listaDeClientes.add(novoCliente);
         
-        System.out.println("✓ Cliente cadastrado com sucesso!");
+        System.out.println("Cliente cadastrado com sucesso!");
     }
 
     // Método para cadastrar um pet para um cliente existente
@@ -112,7 +115,7 @@ public class SistemaPetShop {
         Pet novoPet = new Pet(nomePet, especiePet, racaPet, idadePet, pesoPet);
         clienteEscolhido.adicionarPet(novoPet);
         
-        System.out.println("✓ Pet cadastrado com sucesso para " + clienteEscolhido.getNome() + "!");
+        System.out.println("Pet cadastrado com sucesso para " + clienteEscolhido.getNome() + "!");
     }
 
     // Método para contratar um serviço
@@ -167,7 +170,7 @@ public class SistemaPetShop {
             }
 
             // Mostra confirmação
-            System.out.println("\n✓ Serviço contratado com sucesso!");
+            System.out.println("\nServico contratado com sucesso!");
             System.out.println("Cliente: " + clienteEscolhido.getNome());
             System.out.println("Pet: " + petDoServico.getNome());
             System.out.println("Serviço: " + servicoContratado.getNome());
