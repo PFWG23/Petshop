@@ -759,7 +759,6 @@ public class SistemaPetShopUI extends JFrame {
         relatorio.append("Clientes cadastrados: ").append(tabelaClientes.getRowCount()).append("\n");
         relatorio.append("Vendas realizadas: ").append(tabelaVendas.getRowCount()).append("\n");
         relatorio.append("Agendamentos: ").append(tabelaAgendamentos.getRowCount()).append("\n\n");
-        relatorio.append("Sistema desenvolvido por estudantes de POO\n");
         relatorio.append("Data do relatório: ").append(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
         
         JOptionPane.showMessageDialog(this, relatorio.toString(), "Relatório do Sistema", JOptionPane.INFORMATION_MESSAGE);
@@ -775,7 +774,6 @@ public class SistemaPetShopUI extends JFrame {
         mensagem.append("- Agendamento de servicos\n");
         mensagem.append("- Relatorios do sistema\n\n");
         mensagem.append("Use o menu lateral para navegar!\n");
-        mensagem.append("Desenvolvido por estudantes de POO");
         
         JOptionPane.showMessageDialog(this, mensagem.toString(), "Sistema Pet Shop", JOptionPane.INFORMATION_MESSAGE);
     }
