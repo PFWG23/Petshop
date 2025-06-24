@@ -1,30 +1,16 @@
 @echo off
-echo Compilando o Sistema Pet Shop...
+cd /d "c:\Users\patri\Desktop\Petshop"
 
-REM Primeiro compilar os modelos
-javac -d . src/main/java/model/*.java
-if %ERRORLEVEL% NEQ 0 (
-    echo Erro compilando modelos!
+echo Compilando projeto PetShop...
+javac -d build -cp src\main\java src\main\java\launcher\*.java src\main\java\ui\main\*.java src\main\java\ui\panels\*.java src\main\java\ui\dialogs\*.java src\main\java\ui\components\*.java
+
+if %errorlevel% neq 0 (
+    echo Erro na compilacao!
     pause
     exit /b 1
 )
 
-REM Depois compilar a interface
-javac -d . -cp . src/main/java/ui/swing/*.java
-if %ERRORLEVEL% NEQ 0 (
-    echo Erro compilando interface!
-    pause
-    exit /b 1
-)
+echo Executando PetShop Manager...
+java -cp build launcher.PetShopApp
 
-REM Por ultimo compilar o launcher
-javac -d . -cp . src/main/java/launcher/PetShopLauncher.java
-if %ERRORLEVEL% NEQ 0 (
-    echo Erro compilando launcher!
-    pause
-    exit /b 1
-)
-
-echo Iniciando o Sistema Pet Shop...
-java launcher.PetShopLauncher
 pause

@@ -1,488 +1,567 @@
 package ui.swing;
 import java.awt.*;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
-public class SistemaPetShopUI extends JFrame {
-  private static final long serialVersionUID = 1L;
-    private DefaultTableModel animalsData;
-    private DefaultTableModel customerTbl;
-    private DefaultTableModel vendas_model;
-    private DefaultTableModel scheduleThing;
-      Color azulEscuro = new Color(41, 79, 121);
-      Color cinzento = new Color(161, 172, 178);
-      Color verdeClaro = new Color(29, 158, 84);
-      Color azul = new Color(51, 131, 198);
-      Color bgColor = new Color(243, 246, 249);
-      Color greenBtn = new Color(29, 158, 84);
-      Color grayish = new Color(161, 172, 178);
 
-    public SistemaPetShopUI() {
-        setupWindow();
-        createInterface();
-    }
-    private void setupWindow() {
-        setTitle("Pet Shop Management System/ Sistema de Gerenciamento de Pets");
-        setBounds(100, 60, 1180, 700);
+public class SistemaPetShopUI extends JFrame {
+  private DefaultTableModel tblPets, tblClientes, tblVendas, tblAgenda;
+  private Font fntCustom = new Font("Segoe UI", Font.PLAIN, 12);
+  private Font fntBold = new Font("Segoe UI", Font.BOLD, 12);
+  
+  private final Color DARK_BLUE = new Color(41, 79, 121);
+  private final Color CRcinza = new Color(161, 172, 178);
+  private final Color GREEN_ACCENT = new Color(29, 158, 84);
+  private final Color AZUL_MAIN = new Color(51, 131, 198);
+  private final Color BG_GRAY = new Color(243, 246, 249);
+  private final Color CINZA_NEUTRO = new Color(161, 172, 100);
+
+  public SistemaPetShopUI() {
+      initWin();
+        buildUI();
+    }    private void initWin() {
+        setTitle("PetShop Manager - v2.4");
+        setSize(1180, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-    }
-    private void createInterface() {
-        JPanel mainPanel = new JPanel(new BorderLayout());
-         mainPanel.setBackground(bgColor);
-        JPanel header = buildHeader();
-         mainPanel.add(header, BorderLayout.NORTH);
-        JPanel sidebar = buildSidebar();
-         mainPanel.add(sidebar, BorderLayout.WEST);
-        JPanel center = buildCenterArea();
-         mainPanel.add(center, BorderLayout.CENTER);
-     JPanel statusBar = new JPanel(new FlowLayout(FlowLayout.LEFT));
-          statusBar.setBackground(cinzento);
-           statusBar.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
-        JLabel statusLabel = new JLabel("Sistema ativo");
-           statusLabel.setFont(new Font("Arial", Font.PLAIN, 11));
-           statusLabel.setForeground(azulEscuro);
-           statusBar.add(statusLabel);
-           mainPanel.add(statusBar, BorderLayout.SOUTH);
-        add(mainPanel);
-    }
-    private JPanel buildHeader() {
-        JPanel topPanel = new JPanel(new BorderLayout());
-          topPanel.setBackground(azulEscuro);
-          topPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
-        
-        JLabel titulo = new JLabel("Sistema Pet Shop");
-          titulo.setFont(new Font("Arial", Font.BOLD, 20));
-          titulo.setForeground(Color.WHITE);
-        
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM HH:mm");
-        JLabel horario = new JLabel(sdf.format(new Date()));
-          horario.setFont(new Font("Arial", Font.PLAIN, 12));
-          horario.setForeground(Color.WHITE);
-        
-          topPanel.add(titulo, BorderLayout.WEST);
-          topPanel.add(horario, BorderLayout.EAST);
-        
-        return topPanel;
-    }    
-    private JPanel buildSidebar() {
-        JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setBackground(cinzento);
-        leftPanel.setPreferredSize(new Dimension(180, 0));
-        leftPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
-            JButton homeBtn = createMenuButton("Início");
-            JButton petsBtn = createMenuButton("Animais");
-            JButton clientesBtn = createMenuButton("Clientes");  
-            JButton vendasBtn = createMenuButton("Vendas");
-            JButton agendaBtn = createMenuButton("Agenda");
-            JButton relatorioBtn = createMenuButton("Relatórios");
-         leftPanel.add(homeBtn);
-         leftPanel.add(Box.createVerticalStrut(10));
-         leftPanel.add(petsBtn);
-         leftPanel.add(Box.createVerticalStrut(15));
-         leftPanel.add(clientesBtn);
-         leftPanel.add(Box.createVerticalStrut(10));
-         leftPanel.add(vendasBtn);
-         leftPanel.add(Box.createVerticalStrut(12));
-         leftPanel.add(agendaBtn);
-         leftPanel.add(Box.createVerticalStrut(10));
-         leftPanel.add(relatorioBtn);
-        
-        return leftPanel;
-    }
-    private JButton createMenuButton(String texto) {
-        JButton btn = new JButton(texto);
-     btn.setPreferredSize(new Dimension(160, 35));
-       btn.setMaximumSize(new Dimension(160, 35));
-     btn.setFont(new Font("Arial", Font.BOLD, 12));
-       btn.setBackground(Color.WHITE);
-     btn.setForeground(azulEscuro);
-       btn.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(azul, 1),
-            BorderFactory.createEmptyBorder(5, 10, 5, 10)
-        ));
-        btn.addActionListener(e -> menuAction(texto));
-        return btn;
-    }
-      private void menuAction(String acao) {
-        if(acao.equals("Início")) {
-            showWelcome();
-        } else if(acao.equals("Animais")) {
-            openPetDialog();
-        } else if(acao.equals("Clientes")) {
-            newClientDialog();
-        } else if(acao.equals("Vendas")) {
-            addSale();
-        } else if(acao.equals("Agenda")) {
-            newAppointment();
-        } else if(acao.equals("Relatórios")) {
-            generateReport();
-        }
-    }
-    private JPanel buildCenterArea() {
-     JPanel areaTabelas = new JPanel(new GridLayout(2, 2, 12, 12));
-     areaTabelas.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-     areaTabelas.setBackground(bgColor);
-     JPanel tabelaPets = construirTabelaAnimais();
-     JPanel tabelaClientes = construirTabelaClientes();  
-     JPanel tabelaVendas = construirTabelaVendas();
-     JPanel tabelaAgenda = construirTabelaAgendamentos();
-           areaTabelas.add(tabelaPets);
-           areaTabelas.add(tabelaClientes);
-        areaTabelas.add(tabelaVendas);
-           areaTabelas.add(tabelaAgenda);
-        return areaTabelas;
-    }private JPanel construirTabelaAnimais() {
-        JPanel painelPets = new JPanel(new BorderLayout());
-        painelPets.setBackground(Color.WHITE);
-        
-      TitledBorder bordaPets = BorderFactory.createTitledBorder("Registro de Pets");
-         bordaPets.setTitleFont(new Font("Arial", Font.BOLD, 14));
-         bordaPets.setTitleColor(azul);
-         painelPets.setBorder(bordaPets);
-        String[] colunasPet = {"ID", "Nome", "Tipo", "Raça", "Idade"};
-          animalsData = new DefaultTableModel(colunasPet, 0);
-        String[][] dadosPets = {
-            {"P001", "Rex", "Cachorro", "Pastor Alemão", "3"},
-            {"P002", "Mimi", "Gato", "Persa", "2"},
-            {"P003", "Buddy", "Cachorro", "Golden", "5"},
-            {"P004", "Floquinho", "Coelho", "Angorá", "1"}
-        };
-        
-        for (String[] pet : dadosPets) {
-            animalsData.addRow(pet);
-        }
-        
-        JTable tabelaPet = new JTable(animalsData);
-        configTable(tabelaPet);
-        JScrollPane scrollPet = new JScrollPane(tabelaPet);
-        JButton btnAddPet = criarBotao("Adicionar", azul);
-        btnAddPet.addActionListener(e -> openPetDialog());
-        painelPets.add(scrollPet, BorderLayout.CENTER);
-        painelPets.add(btnAddPet, BorderLayout.SOUTH);
-        
-        return painelPets;
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
     
-    private JPanel construirTabelaClientes() {
-        JPanel painelClientes = new JPanel(new BorderLayout());
-        painelClientes.setBackground(Color.WHITE);
+    private void buildUI() {
+        JPanel main = new JPanel(new BorderLayout());
+         main.setBackground(BG_GRAY);
         
-        TitledBorder bordaClientes = BorderFactory.createTitledBorder("Base de Clientes");
-          bordaClientes.setTitleFont(new Font("Arial", Font.BOLD, 14));
-          bordaClientes.setTitleColor(azul);
-          painelClientes.setBorder(bordaClientes);
-        String[] colunasCliente = {"ID", "Nome Completo", "Telefone", "Email"};
-        customerTbl = new DefaultTableModel(colunasCliente, 0);
+        main.add(createHeader(), BorderLayout.NORTH);
+        main.add(createSidebar(), BorderLayout.WEST);
+        main.add(createContentArea(), BorderLayout.CENTER);
+        
+        JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
+          bottom.setBackground(CRcinza);
+           bottom.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
+        JLabel status = new JLabel("Sistema ativo");
+           status.setFont(fntCustom);
+           status.setForeground(DARK_BLUE);
+           bottom.add(status);
+           main.add(bottom, BorderLayout.SOUTH);
+        
+        add(main);
+    }
+      private JPanel createHeader() {
+        JPanel header = new JPanel(new BorderLayout());
+          header.setBackground(DARK_BLUE);
+          header.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        JLabel title = new JLabel("Sistema Pet Shop");
+          title.setFont(fntBold.deriveFont(20f));
+          title.setForeground(Color.WHITE);
+        SimpleDateFormat fmt = new SimpleDateFormat("dd/MM HH:mm");
+        JLabel time = new JLabel(fmt.format(new Date()));
+          time.setFont(fntCustom);
+          time.setForeground(Color.WHITE);
+          header.add(title, BorderLayout.WEST);
+          header.add(time, BorderLayout.EAST);
+        return header;
+    }
+    private JPanel createSidebar() {
+        JPanel sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBackground(CRcinza);
+        sidebar.setPreferredSize(new Dimension(180, 0));
+        sidebar.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));            JButton home = createSideButton("Inicio");
+            JButton pets = createSideButton("Animais");
+            JButton clients = createSideButton("Clientes");  
+            JButton sales = createSideButton("Vendas");
+            JButton schedule = createSideButton("Agenda");
+            JButton reports = createSideButton("Relatorios");
+         sidebar.add(home);
+         sidebar.add(Box.createVerticalStrut(10));
+         sidebar.add(pets);
+         sidebar.add(Box.createVerticalStrut(15));
+         sidebar.add(clients);
+         sidebar.add(Box.createVerticalStrut(10));
+         sidebar.add(sales);
+         sidebar.add(Box.createVerticalStrut(12));
+         sidebar.add(schedule);
+         sidebar.add(Box.createVerticalStrut(10));
+         sidebar.add(reports);
+        
+        return sidebar;
+    }    private JButton createSideButton(String text) {
+        JButton btn = new JButton(text);
+     btn.setPreferredSize(new Dimension(160, 35));
+       btn.setMaximumSize(new Dimension(160, 35));
+     btn.setFont(fntBold);
+       btn.setBackground(Color.WHITE);
+     btn.setForeground(DARK_BLUE);
+       btn.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(AZUL_MAIN, 1),
+            BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        btn.addActionListener(e -> handleMenuClick(text));
+        return btn;
+    }
+
+    private void handleMenuClick(String action) {
+        switch (action) {
+            case "Animais": showPetDialog(); break;
+            case "Clientes": showClientDialog(); break;
+            case "Vendas": showSaleDialog(); break;
+            case "Agenda": showScheduleDialog(); break;
+            case "Relatorios": generateReport(); break;
+        }
+    }
+    private JPanel createContentArea() {
+     JPanel tables = new JPanel(new GridLayout(2, 2, 12, 12));
+     tables.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+     tables.setBackground(BG_GRAY);
+     JPanel petPanel = buildPetTable();
+     JPanel clientPanel = buildClientTable();  
+     JPanel salesPanel = buildSalesTable();
+     JPanel schedulePanel = buildScheduleTable();
+           tables.add(petPanel);
+           tables.add(clientPanel);
+        tables.add(salesPanel);
+           tables.add(schedulePanel);
+        return tables;
+    }private JPanel buildPetTable() {
+        JPanel petPanel = new JPanel(new BorderLayout());
+        petPanel.setBackground(Color.WHITE);
+      TitledBorder petBorder = BorderFactory.createTitledBorder("Registro de Pets");
+         petBorder.setTitleFont(fntBold.deriveFont(14f));
+         petBorder.setTitleColor(AZUL_MAIN);
+         petPanel.setBorder(petBorder);        
+         String[] colunasPet = {"ID", "Nome", "Tipo", "Raca", "Idade"};
+          tblPets = new DefaultTableModel(colunasPet, 0);        
+          String[][] dadosPets= {
+            {"P001", "Bartolomeu", "Cao", "SRD", "4"},
+            {"P002", "Fifi", "Gato", "Persa", "2"},
+            {"P003", "Thor", "Cao", "Rottweiler", "6"},
+            {"P004", "Luna", "Gato", "Siames", "1"},
+            {"P005", "Pipoca", "Cao", "Vira-lata", "7"},
+            {"P006", "Mel", "Gato", "Munchkin", "3"}
+        };
+        for (String[] pet : dadosPets) {
+            tblPets.addRow(pet);
+        }        JTable tabelaAnimais = new JTable(tblPets);
+        tabelaAnimais.setRowHeight(25);
+        tabelaAnimais.setFont(fntCustom);
+        tabelaAnimais.getTableHeader().setFont(fntBold);
+        tabelaAnimais.getTableHeader().setBackground(CRcinza);
+        tabelaAnimais.setSelectionBackground(AZUL_MAIN);
+        tabelaAnimais.setGridColor(CRcinza);
+        JScrollPane scrollPets = new JScrollPane(tabelaAnimais);
+        JButton btnAdicionarPet = makeButton("Adicionar", AZUL_MAIN);
+        btnAdicionarPet.addActionListener(e -> showPetDialog());
+        petPanel.add(scrollPets, BorderLayout.CENTER);
+        petPanel.add(btnAdicionarPet, BorderLayout.SOUTH);
+        return petPanel;
+      }
+    private JPanel buildClientTable() {
+        JPanel clientPanel = new JPanel(new BorderLayout());
+        clientPanel.setBackground(Color.WHITE); 
+        TitledBorder clientBorder = BorderFactory.createTitledBorder("Base de Clientes");
+          clientBorder.setTitleFont(fntBold.deriveFont(14f));
+          clientBorder.setTitleColor(AZUL_MAIN);
+          clientPanel.setBorder(clientBorder);        
+          String[] colunasCliente = {"ID", "Nome Completo", "Telefone", "Email"};
+        tblClientes = new DefaultTableModel(colunasCliente, 0);        
         String[][] dadosClientes = {
-            {"C001", "Ana Paula Ferreira", "(11) 94567-8901", "ana.ferreira@gmail.com"},
-            {"C002", "João Carlos Mendes", "(11) 91234-5678", "joao.mendes@hotmail.com"},
-            {"C003", "Maria Luiza Costa", "(11) 98765-4321", "malu.costa@outlook.com"},
-            {"C004", "Pedro Henrique Silva", "(11) 95432-1098", "pedro.silva@yahoo.com"}
+            {"C001", "Roberta Machado", "(11) 97654-3210", "roberta.m@email.com"},
+            {"C002", "Carlos Eduardo Santos", "(11) 98765-4321", "carlosE@hotmail.com"},
+            {"C003", "Fernanda M. Santos", "(11) 99876-5432", "fe.santos@outlook.com"},
+            {"C004", "Ricardo Silva Jr.", "(11) 91234-5678", "ricardo.s@yahoo.com"},
+            {"C005", "Ana Beatriz Oliveira", "(11) 94567-8901", "ana.bia@gmail.com"},
+            {"C006", "Marcos Antonio", "(11) 93456-7890", "marcosant@uol.com.br"}
         };
         
         for (String[] cliente : dadosClientes) {
-            customerTbl.addRow(cliente);
-        }
-        
-        JTable tabelaCliente = new JTable(customerTbl);
-        configTable(tabelaCliente);
-        JScrollPane scrollCliente = new JScrollPane(tabelaCliente);
-        JButton btnNovoCliente = criarBotao("Novo Cliente", azul);
-          btnNovoCliente.addActionListener(e -> newClientDialog());
-          painelClientes.add(scrollCliente, BorderLayout.CENTER);
-          painelClientes.add(btnNovoCliente, BorderLayout.SOUTH);
-        
-        return painelClientes;
-    }    
-    
-    private JPanel construirTabelaVendas() {
-        JPanel painelVendas = new JPanel(new BorderLayout());
-          painelVendas.setBackground(Color.WHITE);
-        TitledBorder bordaVendas = BorderFactory.createTitledBorder("Histórico Vendas");
-          bordaVendas.setTitleFont(new Font("Arial", Font.BOLD, 14));
-          bordaVendas.setTitleColor(azul);
-        painelVendas.setBorder(bordaVendas);
-        String[] colunasVenda = {"ID", "Data", "Cliente", "Serviço", "Valor"};
-         vendas_model = new DefaultTableModel(colunasVenda, 0);
-        
-        String[][] dadosVendas = {
-            {"V001", "21/06/2025", "Ana Paula", "Banho e Tosa", "R$ 75,00"},
-            {"V002", "22/06/2025", "João Carlos", "Consulta", "R$ 90,00"},
-            {"V003", "23/06/2025", "Maria Luiza", "Vacinação", "R$ 45,00"}
+            tblClientes.addRow(cliente);
+        }        JTable tabelaClientes = new JTable(tblClientes);
+        tabelaClientes.setRowHeight(25);
+        tabelaClientes.setFont(fntCustom);
+        tabelaClientes.getTableHeader().setFont(fntBold);
+        tabelaClientes.getTableHeader().setBackground(CRcinza);
+        tabelaClientes.setSelectionBackground(AZUL_MAIN);
+        tabelaClientes.setGridColor(CRcinza);
+        JScrollPane scrollClientes = new JScrollPane(tabelaClientes);
+        JButton btnNovoCliente = makeButton("Novo Cliente", AZUL_MAIN);
+          btnNovoCliente.addActionListener(e -> showClientDialog());
+          clientPanel.add(scrollClientes, BorderLayout.CENTER);
+          clientPanel.add(btnNovoCliente, BorderLayout.SOUTH);
+        return clientPanel;
+    }
+    private JPanel buildSalesTable() {
+        JPanel salesPanel = new JPanel(new BorderLayout());
+          salesPanel.setBackground(Color.WHITE);
+        TitledBorder salesBorder = BorderFactory.createTitledBorder("Historico Vendas");
+          salesBorder.setTitleFont(fntBold.deriveFont(14f));
+          salesBorder.setTitleColor(AZUL_MAIN);
+        salesPanel.setBorder(salesBorder);        
+        String[] colunasVenda = {"ID", "Data", "Cliente", "Servico", "Valor"};
+         tblVendas = new DefaultTableModel(colunasVenda, 0);
+          String[][] dadosVendas = {
+            {"V001", "18/06/2025", "Roberta Machado", "Banho Completo", "R$ 85,00"},
+            {"V002", "19/06/2025", "Carlos Eduardo Santos", "Consulta + Vacina", "R$ 120,00"},
+            {"V003", "21/06/2025", "Fernanda M. Santos", "Tosa Higienica", "R$ 60,00"},
+            {"V004", "22/06/2025", "Ana Beatriz Oliveira", "Vermifugacao", "R$ 35,00"}
         };
-        
         for (String[] venda : dadosVendas) {
-            vendas_model.addRow(venda);
-        }
+            tblVendas.addRow(venda);
+        }        JTable tabelaVendas = new JTable(tblVendas);
+        tabelaVendas.setRowHeight(25);
+        tabelaVendas.setFont(fntCustom);
+        tabelaVendas.getTableHeader().setFont(fntBold);
+        tabelaVendas.getTableHeader().setBackground(CRcinza);
+        tabelaVendas.setSelectionBackground(AZUL_MAIN);
+        tabelaVendas.setGridColor(CRcinza);
+        JScrollPane scrollVendas = new JScrollPane(tabelaVendas);
+        JButton btnVenda = makeButton("Nova Venda", AZUL_MAIN);
+         btnVenda.addActionListener(e -> showSaleDialog());
+         salesPanel.add(scrollVendas, BorderLayout.CENTER);
+         salesPanel.add(btnVenda, BorderLayout.SOUTH);
         
-        JTable tblVendas = new JTable(vendas_model);
-         configTableStyle(tblVendas);
-        JScrollPane spVendas = new JScrollPane(tblVendas);
-        JButton btnVenda = criarBotao("Nova Venda", azul);
-         btnVenda.addActionListener(e -> addSale());
-         painelVendas.add(spVendas, BorderLayout.CENTER);
-         painelVendas.add(btnVenda, BorderLayout.SOUTH);
-        
-        return painelVendas;
+        return salesPanel;
+    }
+    private JPanel buildScheduleTable() {
+      JPanel scheduleContainer = new JPanel(new BorderLayout());
+      scheduleContainer.setBackground(Color.WHITE);
+       TitledBorder scheduleBorder = BorderFactory.createTitledBorder("Proximos Agendamentos");
+       scheduleBorder.setTitleFont(fntBold.deriveFont(14f));
+       scheduleBorder.setTitleColor(AZUL_MAIN);
+       scheduleContainer.setBorder(scheduleBorder);        
+       String[] colunasAgenda = {"Data", "Hora", "Cliente", "Pet", "Servico"};
+       tblAgenda = new DefaultTableModel(colunasAgenda, 0);        
+        String[][] dadosAgenda = {
+            {"24/06/2025", "08:30", "Roberta Machado", "Bartolomeu", "Check-up"},
+            {"24/06/2025", "15:00", "Carlos Eduardo Santos", "Fifi", "Vacinacao"},
+            {"25/06/2025", "09:15", "Fernanda M. Santos", "Luna", "Consulta"},
+            {"26/06/2025", "14:30", "Ana Beatriz Oliveira", "Pipoca", "Banho"},
+            {"27/06/2025", "10:00", "Marcos Antonio", "Thor", "Tosa"}
+        };  
+        for (String[] agendamento : dadosAgenda) {
+            tblAgenda.addRow(agendamento);
+        }        JTable tabelaAgenda = new JTable(tblAgenda);
+        tabelaAgenda.setRowHeight(25);
+        tabelaAgenda.setFont(fntCustom);
+        tabelaAgenda.getTableHeader().setFont(fntBold);
+        tabelaAgenda.getTableHeader().setBackground(CRcinza);
+        tabelaAgenda.setSelectionBackground(AZUL_MAIN);
+        tabelaAgenda.setGridColor(CRcinza);
+        JScrollPane scrollAgenda = new JScrollPane(tabelaAgenda);
+        JButton btnAgendar = makeButton("Agendar", AZUL_MAIN);
+        btnAgendar.addActionListener(e -> showScheduleDialog());
+        scheduleContainer.add(scrollAgenda, BorderLayout.CENTER);
+        scheduleContainer.add(btnAgendar, BorderLayout.SOUTH);        return scheduleContainer;
     }
     
-    private JPanel construirTabelaAgendamentos() {
-        JPanel containerAgenda = new JPanel(new BorderLayout());
-        containerAgenda.setBackground(Color.WHITE);
-        
-        TitledBorder bordaAgenda = BorderFactory.createTitledBorder("Próximos Agendamentos");
-        bordaAgenda.setTitleFont(new Font("Arial", Font.BOLD, 14));
-        bordaAgenda.setTitleColor(azul);
-        containerAgenda.setBorder(bordaAgenda);
-        String[] colunasAgenda = {"Data", "Hora", "Cliente", "Pet", "Serviço"};
-        scheduleThing = new DefaultTableModel(colunasAgenda, 0);
-        String[][] dadosAgenda = {
-            {"26/06/2025", "09:00", "Ana Paula", "Rex", "Banho"},
-            {"26/06/2025", "14:30", "João Carlos", "Mimi", "Consulta"},
-            {"27/06/2025", "10:15", "Pedro Silva", "Floquinho", "Check-up"}
-        };
-        
-        for (String[] agendamento : dadosAgenda) {
-            scheduleThing.addRow(agendamento);
-        }
-
-        JTable tabelaAgenda = new JTable(scheduleThing);
-        configTableStyle(tabelaAgenda);
-        JScrollPane scrollAgenda = new JScrollPane(tabelaAgenda);
-        JButton btnAgendar = criarBotao("Agendar", azul);
-        btnAgendar.addActionListener(e -> newAppointment());
-        containerAgenda.add(scrollAgenda, BorderLayout.CENTER);
-        containerAgenda.add(btnAgendar, BorderLayout.SOUTH);
-        
-        return containerAgenda;
-    }    
-    private void configTable(JTable tabela) {
-     tabela.setRowHeight(26);
-     tabela.setFont(new Font("Arial", Font.PLAIN, 11));
-     tabela.getTableHeader().setFont(new Font("Arial", Font.BOLD, 11));
-     tabela.getTableHeader().setBackground(cinzento);
-     tabela.setSelectionBackground(azul);
-     tabela.setGridColor(cinzento);
+    private JButton makeButton(String text, Color color) {
+        JButton button = new JButton(text);
+      button.setFont(fntBold);
+      button.setBackground(color);
+      button.setForeground(Color.WHITE);
+       button.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+       button.setFocusPainted(false);
+        return button;
     }
-    private void configTableStyle(JTable table) {
-        table.setRowHeight(25);
-        table.setFont(new Font("Arial", Font.PLAIN, 10));
-        table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 10));
-        table.getTableHeader().setBackground(cinzento);
-        table.setSelectionBackground(azul);
-        table.setGridColor(cinzento);
-    }
-    private JButton criarBotao(String texto, Color cor) {
-        JButton botao = new JButton(texto);
-     botao.setFont(new Font("Arial", Font.BOLD, 11));
-     botao.setBackground(cor);
-     botao.setForeground(Color.WHITE);
-     botao.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
-     botao.setFocusPainted(false);
-        return botao;
-    }    
-private void openPetDialog() {
-        if (customerTbl.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Adicione clientes primeiro!");
+    
+private void showPetDialog() {
+        if (tblClientes.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Cadastre um cliente primeiro!");
             return;
         }
-        
-        JDialog dlg = new JDialog(this, "Adicionar Pet", true);
-                dlg.setSize(380, 300);
+        JDialog dlg = new JDialog(this, "Novo Animal", true);
+                dlg.setSize(450, 400);
                 dlg.setLocationRelativeTo(this);
-        
         JPanel form = new JPanel(new GridBagLayout());
-         form.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+         form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
          GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(4, 4, 4, 4);
-        
-        gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
-         form.add(new JLabel("Nome do pet:"), gbc);
+        gbc.insets = new Insets(8, 8, 8, 8);
+          gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
+         form.add(new JLabel("Nome:"), gbc);
         gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField nameInput = new JTextField(14);
-         form.add(nameInput, gbc);
-        gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-         form.add(new JLabel("Tipo de animal:"), gbc);
-        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        String[] animalTypes = {"Cachorro", "Gato", "Passaro", "Coelho", "Peixe", "Outro"};
-        JComboBox<String> typeBox = new JComboBox<>(animalTypes);
-         form.add(typeBox, gbc);
-        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-         form.add(new JLabel("Raca:"), gbc);
-        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField breedInput = new JTextField(14);
-         form.add(breedInput, gbc);
-        gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-         form.add(new JLabel("Idade:"), gbc);
-        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField ageInput = new JTextField(14);
-         form.add(ageInput, gbc);
-    
-        JPanel buttonArea = new JPanel(new FlowLayout());
-        JButton saveButton = makeButton("Salvar", greenBtn);
-        JButton cancelButton = makeButton("Cancelar", grayish);
-        
-        saveButton.addActionListener(e -> {
-            String name = nameInput.getText().trim();
-            String type = (String) typeBox.getSelectedItem();
-            String breed = breedInput.getText().trim();
-            String age = ageInput.getText().trim();
-            
-            if (name.isEmpty() || breed.isEmpty() || age.isEmpty()) {
+        JTextField nameField = new JTextField(20);
+          form.add(nameField, gbc);
+          gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+          form.add(new JLabel("Tipo:"), gbc);
+          gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        String[] tipos = {"Cao", "Gato", "Ave", "Coelho", "Outros"};
+        JComboBox<String> tipoBox = new JComboBox<>(tipos);
+            form.add(tipoBox, gbc);
+            gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+            form.add(new JLabel("Raca:"), gbc);
+              gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        JTextField racaField = new JTextField(20);
+           form.add(racaField, gbc);
+           gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+            form.add(new JLabel("Idade:"), gbc);
+           gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        JTextField idadeField = new JTextField(20);
+           form.add(idadeField, gbc);
+        JPanel btnPanel = new JPanel(new FlowLayout());
+        JButton okBtn = makeButton("Salvar", GREEN_ACCENT);
+        JButton cancelBtn = makeButton("Cancelar", CINZA_NEUTRO);
+            okBtn.addActionListener(e -> {            String nome = nameField.getText().trim();
+            String tipo = (String) tipoBox.getSelectedItem();
+            String raca = racaField.getText().trim();
+            String idade = idadeField.getText().trim();            if (nome == null || tipo == null || raca.isEmpty() || idade.isEmpty()) {
                 JOptionPane.showMessageDialog(dlg, "Preencha todos os campos!");
                 return;
             }
             
-            String newId = String.format("P%03d", animalsData.getRowCount() + 1);
-            animalsData.addRow(new Object[]{newId, name, type, breed, age});
-            
+            String idPet = String.format("P%03d", tblPets.getRowCount() + 1);
+            tblPets.addRow(new Object[]{idPet, nome, tipo, raca, idade});
             dlg.dispose();
-            JOptionPane.showMessageDialog(this, "Pet adicionado com sucesso!");
-        });        
-        cancelButton.addActionListener(e -> dlg.dispose());
-        buttonArea.add(saveButton);
-        buttonArea.add(cancelButton);
+            JOptionPane.showMessageDialog(this, "Pet cadastrado com sucesso!");
+        });
+        cancelBtn.addActionListener(e -> dlg.dispose());
+        btnPanel.add(okBtn);
+        btnPanel.add(cancelBtn);
         gbc.gridx = 0; gbc.gridy = 4; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.HORIZONTAL;
-        form.add(buttonArea, gbc);
+        form.add(btnPanel, gbc);
         dlg.add(form);
         dlg.setVisible(true);
-    }    private void newClientDialog() {
-        JDialog window = new JDialog(this, "Novo Cliente", true);
-          window.setSize(360, 220);
-          window.setLocationRelativeTo(this);
-        JPanel panel = new JPanel(new GridBagLayout());
-         panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
-        GridBagConstraints gbc = new GridBagConstraints();
-               gbc.insets= new Insets(5, 5, 5, 5);
-              gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
-            panel.add(new JLabel("Nome Completo:"), gbc);
-          gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField nameField = new JTextField(20);
-               panel.add(nameField, gbc);
-              gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-             panel.add(new JLabel("Telefone:"), gbc);
-            gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField phoneField = new JTextField(20);
-             panel.add(phoneField, gbc);
-            gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-           panel.add(new JLabel("Email:"), gbc);
-           gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-          JTextField emailField = new JTextField(20);
-        panel.add(emailField, gbc);        
-          JPanel buttons = new JPanel(new FlowLayout());
-          JButton okBtn = makeButton("Adicionar", greenBtn);
-          JButton cancelBtn = makeButton("Fechar", grayish);
-    
-        okBtn.addActionListener(e -> {
-            String name = nameField.getText().trim();
-            String phone = phoneField.getText().trim();
+    }
+      private void showClientDialog() {
+        JDialog clientDlg = new JDialog(this, "Cadastro Cliente", true);
+        clientDlg.setSize(390, 270);
+        clientDlg.setLocationRelativeTo(this);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        namePanel.add(new JLabel("Nome Completo:"));
+        JTextField nomeField = new JTextField(25);
+        namePanel.add(nomeField);
+        mainPanel.add(namePanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        JPanel phonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        phonePanel.add(new JLabel("Telefone:      "));
+        JTextField telefoneField = new JTextField(25);
+        phonePanel.add(telefoneField);
+        mainPanel.add(phonePanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        JPanel emailPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        emailPanel.add(new JLabel("Email:           "));
+        JTextField emailField = new JTextField(25);
+        emailPanel.add(emailField);
+        mainPanel.add(emailPanel);
+        mainPanel.add(Box.createVerticalStrut(15));
+        JPanel btnPanel = new JPanel(new FlowLayout());
+        JButton salvarBtn = makeButton("Salvar", GREEN_ACCENT);
+        JButton cancelarBtn = makeButton("Cancelar", CINZA_NEUTRO);
+        salvarBtn.addActionListener(e -> {
+            String nome = nomeField.getText().trim();
+            String tel = telefoneField.getText().trim();
             String email = emailField.getText().trim();
             
-            if (name.isEmpty() || phone.isEmpty() || email.isEmpty()) {
-                JOptionPane.showMessageDialog(window, "Todos os campos sao obrigatorios!");
+            if (nome.isEmpty() || tel.isEmpty() || email.isEmpty()) {
+                JOptionPane.showMessageDialog(clientDlg, "Todos os campos são obrigatórios!");
+                return;
+            }
+              String clientId = String.format("C%03d", tblClientes.getRowCount() + 1);
+            tblClientes.addRow(new Object[]{clientId, nome, tel, email});
+            
+            clientDlg.dispose();
+            JOptionPane.showMessageDialog(this, "Cliente cadastrado!");
+        });
+        
+        cancelarBtn.addActionListener(e -> clientDlg.dispose());
+        
+        btnPanel.add(salvarBtn);
+        btnPanel.add(cancelarBtn);
+        mainPanel.add(btnPanel);
+        
+        clientDlg.add(mainPanel);
+        clientDlg.setVisible(true);
+    }private void showSaleDialog() {
+        if (tblClientes.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Cadastre clientes primeiro!");
+            return;
+        }
+        
+        JDialog saleDialog = new JDialog(this, "Registrar Venda", true);
+        saleDialog.setSize(420, 350);
+        saleDialog.setLocationRelativeTo(this);
+        
+        JPanel form = new JPanel(new GridBagLayout());
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+          gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
+        form.add(new JLabel("Cliente:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        
+        DefaultComboBoxModel<String> modeloCliente = new DefaultComboBoxModel<>();
+        for (int i = 0; i < tblClientes.getRowCount(); i++) {
+            modeloCliente.addElement(tblClientes.getValueAt(i, 1).toString());
+        }
+        JComboBox<String> comboCliente = new JComboBox<>(modeloCliente);
+        form.add(comboCliente, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Tipo de Servico:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        String[] servicos = {"Banho Completo", "Tosa Higienica", "Consulta Veterinaria", "Vacinacao", "Vermifugacao", "Cirurgia", "Hospedagem"};
+        JComboBox<String> comboServico = new JComboBox<>(servicos);
+        form.add(comboServico, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Valor:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        JTextField campoValor = new JTextField("0.00", 15);
+        form.add(campoValor, gbc);
+        
+        JPanel btnPanel = new JPanel(new FlowLayout());
+        JButton okBtn = makeButton("Registrar", GREEN_ACCENT);
+        JButton cancelBtn = makeButton("Cancelar", CINZA_NEUTRO);
+          okBtn.addActionListener(e -> {
+            String cliente = (String) comboCliente.getSelectedItem();
+            String servico = (String) comboServico.getSelectedItem();
+            String valor = campoValor.getText().trim();
+            
+            if (cliente == null || servico == null || valor.isEmpty()) {
+                JOptionPane.showMessageDialog(saleDialog, "Preencha todos os campos!");
+                return;
+            }            try {
+                Double.parseDouble(valor.replace(",", "."));
+                String idVenda = String.format("V%03d", tblVendas.getRowCount() + 1);
+                SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
+                String hoje = fmt.format(new Date());
+                tblVendas.addRow(new Object[]{idVenda, hoje, cliente, servico, "R$ " + valor});
+                
+                saleDialog.dispose();
+                JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!");
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(saleDialog, "Valor invalido!");
+            }
+        });
+        
+        cancelBtn.addActionListener(e -> saleDialog.dispose());
+        btnPanel.add(okBtn);
+        btnPanel.add(cancelBtn);
+        
+        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.HORIZONTAL;
+        form.add(btnPanel, gbc);
+        
+        saleDialog.add(form);
+        saleDialog.setVisible(true);
+    }    private void showScheduleDialog() {
+        if (tblClientes.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(this, "Cadastre clientes primeiro!");
+            return;
+        }
+        
+        JDialog agendaDialog = new JDialog(this, "Novo Agendamento", true);
+        agendaDialog.setSize(420, 380);
+        agendaDialog.setLocationRelativeTo(this);
+        
+        JPanel form = new JPanel(new GridBagLayout());
+        form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8, 8, 8, 8);
+          gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
+        form.add(new JLabel("Cliente:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        
+        DefaultComboBoxModel<String> modeloCliente = new DefaultComboBoxModel<>();
+        for (int i = 0; i < tblClientes.getRowCount(); i++) {
+            modeloCliente.addElement(tblClientes.getValueAt(i, 1).toString());
+        }
+        JComboBox<String> comboCliente = new JComboBox<>(modeloCliente);
+        form.add(comboCliente, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Pet:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        JTextField campoPet = new JTextField(20);
+        form.add(campoPet, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Data:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        JTextField campoData = new JTextField("dd/MM/yyyy", 20);
+        form.add(campoData, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Horario:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        String[] horarios = {"08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30"};
+        JComboBox<String> comboHorario = new JComboBox<>(horarios);
+        form.add(comboHorario, gbc);
+        
+        gbc.gridx = 0; gbc.gridy = 4; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        form.add(new JLabel("Servico:"), gbc);
+        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        String[] servicos = {"Check-up", "Vacinacao", "Consulta", "Cirurgia", "Banho e Tosa", "Exame"};
+        JComboBox<String> comboServico = new JComboBox<>(servicos);
+        form.add(comboServico, gbc);
+        
+        JPanel btnPanel = new JPanel(new FlowLayout());
+        JButton okBtn = makeButton("Agendar", GREEN_ACCENT);
+        JButton cancelBtn = makeButton("Cancelar", CINZA_NEUTRO);
+          okBtn.addActionListener(e -> {
+            String cliente = (String) comboCliente.getSelectedItem();
+            String pet = campoPet.getText().trim();
+            String data = campoData.getText().trim();
+            String horario = (String) comboHorario.getSelectedItem();
+            String servico = (String) comboServico.getSelectedItem();
+            
+            if (cliente == null || pet.isEmpty() || data.isEmpty() || horario == null || servico == null) {
+                JOptionPane.showMessageDialog(agendaDialog, "Preencha todos os campos!");
                 return;
             }
             
-            String newId = String.format("C%03d", customerTbl.getRowCount() + 1);
-            customerTbl.addRow(new Object[]{newId, name, phone, email});
-            
-            window.dispose();
-            JOptionPane.showMessageDialog(this, "Cliente adicionado!");
+            tblAgenda.addRow(new Object[]{data, horario, cliente, pet, servico});
+            agendaDialog.dispose();
+            JOptionPane.showMessageDialog(this, "Agendamento realizado com sucesso!");
         });
         
-        cancelBtn.addActionListener(e -> window.dispose());
+        cancelBtn.addActionListener(e -> agendaDialog.dispose());
+        btnPanel.add(okBtn);
+        btnPanel.add(cancelBtn);
         
-        buttons.add(okBtn);
-        buttons.add(cancelBtn);
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.HORIZONTAL;
+        form.add(btnPanel, gbc);
         
-        gbc.gridx = 0; gbc.gridy = 3; gbc.gridwidth = 2; gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(buttons, gbc);
+        agendaDialog.add(form);
+        agendaDialog.setVisible(true);
+    }    private void generateReport() {
+        int totalPets = tblPets.getRowCount();
+        int totalClientes = tblClientes.getRowCount();
+        int totalVendas = tblVendas.getRowCount();
+        int agendamentos = tblAgenda.getRowCount();
         
-        window.add(panel);
-        window.setVisible(true);
-    }
-      private void addSale() {
-        if (customerTbl.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Nenhum cliente encontrado!");
-            return;
+        double mediaClientesPorPet = totalClientes > 0 ? (double)totalPets / totalClientes : 0;
+          StringBuilder relatorio = new StringBuilder();
+        relatorio.append("=== RELATORIO GERENCIAL ===\n\n");
+        relatorio.append("Data: ").append(new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date())).append("\n\n");
+        
+        relatorio.append("RESUMO GERAL:\n");
+        relatorio.append("Pets cadastrados: ").append(totalPets).append("\n");
+        relatorio.append("Clientes ativos: ").append(totalClientes).append("\n");
+        relatorio.append("Vendas realizadas: ").append(totalVendas).append("\n");
+        relatorio.append("Proximos agendamentos: ").append(agendamentos).append("\n\n");
+        
+        relatorio.append("ANALISES:\n");
+        relatorio.append("Media pets/cliente: ").append(String.format("%.2f", mediaClientesPorPet)).append("\n");
+        
+        if (totalVendas > 0) {
+            relatorio.append("Status: Sistema ativo com movimento\n");
+        } else {
+            relatorio.append("Status: Aguardando primeiras vendas\n");
         }
         
-        String customer = JOptionPane.showInputDialog(this, "Nome do cliente:");
-        if (customer != null && !customer.trim().isEmpty()) {
-            String amount = JOptionPane.showInputDialog(this, "Valor da venda:");
-            if (amount != null && !amount.trim().isEmpty()) {
-              String saleId = "S" + String.format("%03d", vendas_model.getRowCount() + 1);
-              SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-              String today = dateFormat.format(new Date());
-                vendas_model.addRow(new Object[]{saleId, today, customer, "Servico", "R$ " + amount});
-              JOptionPane.showMessageDialog(this, "Venda registrada!");
-            }
-        }
-    }
-      private void newAppointment() {
-        if (customerTbl.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(this, "Nenhum cliente disponivel!");
-            return;
-        }
+        relatorio.append("\n--- Relatorio gerado automaticamente ---");
         
-        String customer = JOptionPane.showInputDialog(this, "Cliente:");
-        if (customer != null && !customer.trim().isEmpty()) {
-            String petName = JOptionPane.showInputDialog(this, "Nome do pet:");
-            if (petName != null && !petName.trim().isEmpty()) {
-                String appointmentDate = JOptionPane.showInputDialog(this, "Data (dd/MM/yyyy):");
-                if (appointmentDate != null && !appointmentDate.trim().isEmpty()) {
-                    scheduleThing.addRow(new Object[]{appointmentDate, "09:00", customer, petName, "Consulta"});
-                    JOptionPane.showMessageDialog(this, "Agendamento realizado!");
-                }
-            }
-        }
+        JTextArea areaTexto = new JTextArea(relatorio.toString());
+        areaTexto.setEditable(false);        areaTexto.setFont(fntCustom);
+        JScrollPane scroll = new JScrollPane(areaTexto);
+        scroll.setPreferredSize(new Dimension(400, 300));
+          JOptionPane.showMessageDialog(this, scroll, "Relatorio do Sistema", JOptionPane.INFORMATION_MESSAGE);
     }
-      private void generateReport() {
-        StringBuilder report = new StringBuilder();
-        report.append("RELATORIO DO SISTEMA\n\n");
-        
-        int pets = animalsData.getRowCount();
-        int customers = customerTbl.getRowCount();
-        int sales = vendas_model.getRowCount();
-        int appointments = scheduleThing.getRowCount();
-        
-        report.append("Total de pets: ").append(pets).append("\n");
-        report.append("Total de clientes: ").append(customers).append("\n");
-        report.append("Total de vendas: ").append(sales).append("\n");
-        report.append("Agendamentos: ").append(appointments).append("\n\n");
-        
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        report.append("Gerado em: ").append(dateFormat.format(new Date()));
-        
-        JOptionPane.showMessageDialog(this, report.toString(), "Relatorio", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    private void showWelcome() {
-      StringBuilder message = new StringBuilder();
-       message.append("Sistema de Gerenciamento de Pets\n\n");
-       message.append("Funcionalidades disponíveis:\n");
-       message.append("• Cadastro de pets\n");
-       message.append("• Gerenciamento de clientes\n");
-       message.append("• Controle de vendas\n");
-       message.append("• Agendamento de consultas\n");
-       message.append("• Geração de relatórios\n\n");
-       message.append("Use a barra lateral para navegar.");
-        JOptionPane.showMessageDialog(this, message.toString(), "Bem-vindo", JOptionPane.INFORMATION_MESSAGE);
-    }
-      private JButton makeButton(String text, Color color) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.BOLD, 11));
-        button.setBackground(color);
-        button.setForeground(Color.WHITE);
-        button.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
-        button.setFocusPainted(false);
-        return button;
-    }
-      public static void main(String[] args) {
+
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             new SistemaPetShopUI().setVisible(true);
         });
