@@ -6,7 +6,8 @@ import java.util.Date;
 import javax.swing.*;
 
 public class HeaderPanel {
-    
+    // Cria o painel de cabeçalho com o título e a hora atual
+    // Recebe fontes e cores como parâmetros para personalização
     public JPanel createHeader(Font fntBold, Font fntCustom, Color darkBlue) {
         JPanel header = new JPanel(new BorderLayout());
           header.setBackground(darkBlue);

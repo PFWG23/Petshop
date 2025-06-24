@@ -4,7 +4,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class ButtonUtils {
-    
+    // Método utilitário para criar botões personalizados
+    // Recebe o texto, cor de fundo e fonte como parâmetros
     public static JButton makeButton(String text, Color color, Font font) {
         JButton button = new JButton(text);
       button.setFont(font);

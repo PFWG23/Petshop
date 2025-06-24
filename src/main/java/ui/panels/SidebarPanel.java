@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import javax.swing.*;
 
 public class SidebarPanel {
-    
+    // Cria o painel lateral com botões de navegação
     public JPanel createSidebar(Font fntBold, Color crCinza, Color darkBlue, Color azulMain, Consumer<String> actionHandler) {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
@@ -21,7 +21,9 @@ public class SidebarPanel {
         
         return sidebar;
     }
-    
+    // Cria um botão com estilo personalizado
+    // Recebe o texto, fontes e cores como parâmetros, além de um Consumer para o // manipulador de ações
+    // O Consumer permite que a ação seja definida externamente, facilitando a reutilização
     private JButton createSideButton(String text, Font fntBold, Color darkBlue, Color azulMain, Consumer<String> actionHandler) {
         JButton btn = new JButton(text);
      btn.setPreferredSize(new Dimension(160, 35));

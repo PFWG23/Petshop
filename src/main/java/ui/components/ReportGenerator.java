@@ -7,7 +7,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class ReportGenerator {
-    
+    // Método para gerar o relatório gerencial
+    // Recebe o JFrame pai, fonte personalizada e modelos de tabela para pets, clientes,
     public void generateReport(JFrame parent, Font fntCustom, DefaultTableModel tblPets, 
                               DefaultTableModel tblClientes, DefaultTableModel tblVendas, DefaultTableModel tblAgenda) {
         int totalPets = tblPets.getRowCount();

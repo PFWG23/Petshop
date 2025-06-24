@@ -11,7 +11,8 @@ public class SaleDialog {
     private JFrame parent;
     private Font fntCustom, fntBold;
     private Color greenAccent, cinzaNeutro;
-    
+    // Construtor que recebe os parâmetros necessários para personalização
+    // do diálogo de venda, como fontes e cores
     public SaleDialog(JFrame parent, Font fntCustom, Font fntBold, Color greenAccent, Color cinzaNeutro) {
         this.parent = parent;
         this.fntCustom = fntCustom;
@@ -19,7 +20,8 @@ public class SaleDialog {
         this.greenAccent = greenAccent;
         this.cinzaNeutro = cinzaNeutro;
     }
-    
+    //  Exibe o diálogo de venda
+    // Recebe os modelos de tabela de clientes e vendas para manipulação
     public void showDialog(DefaultTableModel tblClientes, DefaultTableModel tblVendas) {
         JDialog saleDialog = new JDialog(parent, "Registrar Venda", true);
         saleDialog.setSize(420, 350);
@@ -53,7 +55,7 @@ public class SaleDialog {
         gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
         JTextField campoValor = new JTextField("0.00", 15);
         form.add(campoValor, gbc);
-        
+        // Adiciona um campo de texto para o valor da venda
         JPanel btnPanel = new JPanel(new FlowLayout());
         JButton okBtn = ButtonUtils.makeButton("Registrar", greenAccent, fntBold);
         JButton cancelBtn = ButtonUtils.makeButton("Cancelar", cinzaNeutro, fntBold);
@@ -81,7 +83,8 @@ public class SaleDialog {
                 JOptionPane.showMessageDialog(saleDialog, "Valor invalido!");
             }
         });
-        
+        // Ação do botão Registrar
+        // Verifica se todos os campos estão preenchidos e registra a venda
         cancelBtn.addActionListener(e -> saleDialog.dispose());
         btnPanel.add(okBtn);
         btnPanel.add(cancelBtn);

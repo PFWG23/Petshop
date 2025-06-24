@@ -3,6 +3,7 @@ package util;
 import java.io.*;
 import javax.swing.table.DefaultTableModel;
 
+// cuida de salvar e carregar dados
 public class DataPersistence {
     private static final String DATA_DIR = "data/";
     private static final String CLIENTES_FILE = DATA_DIR + "clientes.txt";
@@ -10,14 +11,14 @@ public class DataPersistence {
     private static final String VENDAS_FILE = DATA_DIR + "vendas.txt";
     private static final String AGENDA_FILE = DATA_DIR + "agenda.txt";
     
+    // verifica se pasta existe senao cria
     public static void createDataDir() {
         File dir = new File(DATA_DIR);
         if (!dir.exists()) {
             dir.mkdirs();
         }
     }
-    
-    // Salvar clientes
+      // grava clientes no arquivo texto
     public static void saveClientes(DefaultTableModel model) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(CLIENTES_FILE))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -33,7 +34,7 @@ public class DataPersistence {
         }
     }
     
-    // Carregar clientes
+    // le clientes do arquivo salvo
     public static void loadClientes(DefaultTableModel model) {
         File file = new File(CLIENTES_FILE);
         if (!file.exists()) return;
@@ -45,11 +46,10 @@ public class DataPersistence {
                 model.addRow(dados);
             }
         } catch (IOException e) {
-            System.err.println("Erro ao carregar clientes: " + e.getMessage());
-        }
+            System.err.println("Erro ao carregar clientes: " + e.getMessage());        }
     }
     
-    // Salvar pets
+    // gravar pets
     public static void savePets(DefaultTableModel model) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(PETS_FILE))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -65,7 +65,7 @@ public class DataPersistence {
         }
     }
     
-    // Carregar pets
+    // ler pets salvos
     public static void loadPets(DefaultTableModel model) {
         File file = new File(PETS_FILE);
         if (!file.exists()) return;
@@ -81,7 +81,7 @@ public class DataPersistence {
         }
     }
     
-    // Salvar vendas
+    // gravar vendas no arquivo
     public static void saveVendas(DefaultTableModel model) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(VENDAS_FILE))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -95,9 +95,8 @@ public class DataPersistence {
         } catch (IOException e) {
             System.err.println("Erro ao salvar vendas: " + e.getMessage());
         }
-    }
-    
-    // Carregar vendas
+    }    
+    // ler vendas do arquivo
     public static void loadVendas(DefaultTableModel model) {
         File file = new File(VENDAS_FILE);
         if (!file.exists()) return;
@@ -113,7 +112,7 @@ public class DataPersistence {
         }
     }
     
-    // Salvar agenda
+    // gravar agenda
     public static void saveAgenda(DefaultTableModel model) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(AGENDA_FILE))) {
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -129,7 +128,7 @@ public class DataPersistence {
         }
     }
     
-    // Carregar agenda
+    // ler agenda salva
     public static void loadAgenda(DefaultTableModel model) {
         File file = new File(AGENDA_FILE);
         if (!file.exists()) return;

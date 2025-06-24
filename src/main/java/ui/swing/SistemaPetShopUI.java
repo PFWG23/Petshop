@@ -6,28 +6,26 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import util.DataPersistence;
-
+//Feito por Patrick Gomes, Joao Moller e Renato Amaral
+//versao 2.4 do sistema PetShop Manager ja completa, com a integracao de persistencia de dados e acentuacao de texto em arquivos permitidos.
 public class SistemaPetShopUI extends JFrame {
-  // Models das tabelas
+  // tabelas do sistema
   private DefaultTableModel tblPets, tblClientes, tblVendas, tblAgenda;
-  
-  // Fontes customizadas
+  // fontes usadas na interface
   private Font fntCustom = new Font("Segoe UI", Font.PLAIN, 12);
   private Font fntBold = new Font("Segoe UI", Font.BOLD, 12);
-  
-  // Cores do sistema
+  // cores principais da interface
   private final Color DARK_BLUE = new Color(41, 79, 121);
   private final Color CRcinza = new Color(161, 172, 178);
   private final Color GREEN_ACCENT = new Color(29, 158, 84);
   private final Color AZUL_MAIN = new Color(51, 131, 198);
   private final Color BG_GRAY = new Color(243, 246, 249);
   private final Color CINZA_NEUTRO = new Color(161, 172, 100);  public SistemaPetShopUI() {
-      DataPersistence.createDataDir(); // Criar pasta de dados
+      DataPersistence.createDataDir(); // precisa criar a pasta primeiro
       initWin();
         buildUI();
-        loadAllData(); // Carregar dados salvos
-        
-        // Salvar dados ao fechar
+        loadAllData(); // carrega o que ja foi salvo antes
+        // quando fechar salva tudo automaticamente
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override
             public void windowClosing(java.awt.event.WindowEvent windowEvent) {
@@ -35,22 +33,23 @@ public class SistemaPetShopUI extends JFrame {
                 System.exit(0);
             }
         });
-    }private void initWin() {
+    }    // configuracoes basicas da janela principal
+    private void initWin() {
         setTitle("PetShop Manager - v2.4");
         setSize(1180, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
     }
-    
+      // constroi toda a interface grafica
     private void buildUI() {
         JPanel main = new JPanel(new BorderLayout());
-         main.setBackground(BG_GRAY);
-        
+         main.setBackground(BG_GRAY);        
         main.add(createHeader(), BorderLayout.NORTH);
         main.add(createSidebar(), BorderLayout.WEST);
         main.add(createContentArea(), BorderLayout.CENTER);
         
+        // rodape com status
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
           bottom.setBackground(CRcinza);
            bottom.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
@@ -61,7 +60,7 @@ public class SistemaPetShopUI extends JFrame {
            main.add(bottom, BorderLayout.SOUTH);
         
         add(main);
-    }
+    }      // parte superior com titulo e horario
       private JPanel createHeader() {
         JPanel header = new JPanel(new BorderLayout());
           header.setBackground(DARK_BLUE);
@@ -76,13 +75,16 @@ public class SistemaPetShopUI extends JFrame {
           header.add(title, BorderLayout.WEST);
           header.add(time, BorderLayout.EAST);
         return header;
-    }
+    }    // menu lateral com opcoes
     private JPanel createSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setBackground(CRcinza);
         sidebar.setPreferredSize(new Dimension(180, 0));
-        sidebar.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));            JButton home = createSideButton("Inicio");
+        sidebar.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
+        
+        // botoes do menu principal
+        JButton home = createSideButton("Inicio");
             JButton pets = createSideButton("Animais");
             JButton clients = createSideButton("Clientes");  
             JButton sales = createSideButton("Vendas");
@@ -101,7 +103,8 @@ public class SistemaPetShopUI extends JFrame {
          sidebar.add(reports);
         
         return sidebar;
-    }    private JButton createSideButton(String text) {
+        // metodo para carregar os dados salvos
+    }private JButton createSideButton(String text) {
         JButton btn = new JButton(text);
      btn.setPreferredSize(new Dimension(160, 35));
        btn.setMaximumSize(new Dimension(160, 35));
@@ -156,6 +159,7 @@ public class SistemaPetShopUI extends JFrame {
         tabelaAnimais.setSelectionBackground(AZUL_MAIN);
         tabelaAnimais.setGridColor(CRcinza);        
         JScrollPane scrollPets = new JScrollPane(tabelaAnimais);
+        // botoes para adicionar e deletar pets
         
         JPanel petButtons = new JPanel(new FlowLayout());
         JButton btnAdicionarPet = makeButton("Adicionar", AZUL_MAIN);
@@ -195,7 +199,7 @@ public class SistemaPetShopUI extends JFrame {
         
           btnNovoCliente.addActionListener(e -> showClientDialog());
           btnDeletarCliente.addActionListener(e -> deletarCliente(tabelaClientes));
-          
+          // adiciona botoes no painel
           clientButtons.add(btnNovoCliente);
           clientButtons.add(btnDeletarCliente);
           
@@ -211,19 +215,28 @@ public class SistemaPetShopUI extends JFrame {
         salesPanel.setBorder(salesBorder);        
         String[] colunasVenda = {"ID", "Data", "Cliente", "Servico", "Valor"};
          tblVendas = new DefaultTableModel(colunasVenda, 0);
-          
+          // tabela de vendas
         JTable tabelaVendas = new JTable(tblVendas);
         tabelaVendas.setRowHeight(25);
         tabelaVendas.setFont(fntCustom);
         tabelaVendas.getTableHeader().setFont(fntBold);
         tabelaVendas.getTableHeader().setBackground(CRcinza);
         tabelaVendas.setSelectionBackground(AZUL_MAIN);
-        tabelaVendas.setGridColor(CRcinza);
-        JScrollPane scrollVendas = new JScrollPane(tabelaVendas);
+        tabelaVendas.setGridColor(CRcinza);        JScrollPane scrollVendas = new JScrollPane(tabelaVendas);
+        // botoes para registrar nova venda e deletar
+         // botoes de vendas
+        JPanel vendaButtons = new JPanel(new FlowLayout());
         JButton btnVenda = makeButton("Nova Venda", AZUL_MAIN);
+        JButton btnDeletarVenda = makeButton("Deletar", new Color(220, 53, 69));
+        
          btnVenda.addActionListener(e -> showSaleDialog());
+         btnDeletarVenda.addActionListener(e -> deletarVenda(tabelaVendas));
+         
+         vendaButtons.add(btnVenda);
+         vendaButtons.add(btnDeletarVenda);
+         
          salesPanel.add(scrollVendas, BorderLayout.CENTER);
-         salesPanel.add(btnVenda, BorderLayout.SOUTH);
+         salesPanel.add(vendaButtons, BorderLayout.SOUTH);
         
         return salesPanel;
     }    private JPanel buildScheduleTable() {
@@ -242,12 +255,20 @@ public class SistemaPetShopUI extends JFrame {
         tabelaAgenda.getTableHeader().setFont(fntBold);
         tabelaAgenda.getTableHeader().setBackground(CRcinza);
         tabelaAgenda.setSelectionBackground(AZUL_MAIN);
-        tabelaAgenda.setGridColor(CRcinza);
-        JScrollPane scrollAgenda = new JScrollPane(tabelaAgenda);
+        tabelaAgenda.setGridColor(CRcinza);        JScrollPane scrollAgenda = new JScrollPane(tabelaAgenda);
+        
+        JPanel agendaButtons = new JPanel(new FlowLayout());
         JButton btnAgendar = makeButton("Agendar", AZUL_MAIN);
+        JButton btnDeletarAgenda = makeButton("Cancelar", new Color(220, 53, 69));
+        
         btnAgendar.addActionListener(e -> showScheduleDialog());
+        btnDeletarAgenda.addActionListener(e -> deletarAgendamento(tabelaAgenda));
+        
+        agendaButtons.add(btnAgendar);
+        agendaButtons.add(btnDeletarAgenda);
+        
         scheduleContainer.add(scrollAgenda, BorderLayout.CENTER);
-        scheduleContainer.add(btnAgendar, BorderLayout.SOUTH);        
+        scheduleContainer.add(agendaButtons, BorderLayout.SOUTH);
         return scheduleContainer;
     }
     
@@ -272,9 +293,8 @@ private void showPetDialog() {
         JPanel form = new JPanel(new GridBagLayout());
          form.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
          GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(8, 8, 8, 8);
-          
-          // Cliente
+        gbc.insets = new Insets(8, 8, 8, 8);          
+          // dono do pet
           gbc.gridx = 0; gbc.gridy = 0; gbc.anchor = GridBagConstraints.WEST;
           form.add(new JLabel("Proprietario:"), gbc);
           gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
@@ -285,9 +305,9 @@ private void showPetDialog() {
           JComboBox<String> clienteBox = new JComboBox<>(modeloCliente);
           form.add(clienteBox, gbc);
           
-          // Nome do pet
+          // nome do pet
           gbc.gridx = 0; gbc.gridy = 1; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
-         form.add(new JLabel("Nome:"), gbc);        gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+         form.add(new JLabel("Nome:"), gbc);gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
         JTextField nameField = new JTextField(20);
           form.add(nameField, gbc);
           gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
@@ -333,10 +353,9 @@ private void showPetDialog() {
             if (!isIdadeValid(idade)) {
                 JOptionPane.showMessageDialog(dlg, "Idade deve ser um número entre 0 e 30!");
                 return;
-            }
-              String idPet = String.format("P%03d", tblPets.getRowCount() + 1);
+            }              String idPet = String.format("P%03d", tblPets.getRowCount() + 1);
             tblPets.addRow(new Object[]{idPet, nome, tipo, raca, cliente});
-            saveAllData(); // Salvar automaticamente
+            saveAllData(); // salva logo depois de cadastrar
             dlg.dispose();
             JOptionPane.showMessageDialog(this, "Pet cadastrado com sucesso!");
         });cancelBtn.addActionListener(e -> dlg.dispose());
@@ -395,7 +414,7 @@ private void showPetDialog() {
             }
               String clientId = String.format("C%03d", tblClientes.getRowCount() + 1);
             tblClientes.addRow(new Object[]{clientId, nome, tel, email});
-            saveAllData(); // Salvar automaticamente
+            saveAllData(); // salva logo apos mudanca
             
             clientDlg.dispose();
             JOptionPane.showMessageDialog(this, "Cliente cadastrado!");
@@ -485,7 +504,7 @@ private void showPetDialog() {
                 SimpleDateFormat fmt = new SimpleDateFormat("dd/MM/yyyy");
                 String hoje = fmt.format(new Date());
                 tblVendas.addRow(new Object[]{idVenda, hoje, cliente, servicoCompleto, "R$ " + valor});
-                saveAllData(); // Salvar automaticamente
+                saveAllData(); // salva logo apos mudanca
                 
                 saleDialog.dispose();
                 JOptionPane.showMessageDialog(this, "Venda registrada com sucesso!");
@@ -538,12 +557,31 @@ private void showPetDialog() {
         }
         JComboBox<String> comboPet = new JComboBox<>(modeloPet);
         form.add(comboPet, gbc);
-        
-        gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+          gbc.gridx = 0; gbc.gridy = 2; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
         form.add(new JLabel("Data:"), gbc);
         gbc.gridx = 1; gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
-        JTextField campoData = new JTextField("dd/MM/yyyy", 20);
-        form.add(campoData, gbc);
+        
+        // combo boxes pra escolher data
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        String[] dias = new String[31];
+        for (int i = 1; i <= 31; i++) {
+            dias[i-1] = String.format("%02d", i);
+        }
+        JComboBox<String> comboDia = new JComboBox<>(dias);
+        
+        String[] meses = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
+        JComboBox<String> comboMes = new JComboBox<>(meses);
+        
+        String[] anos = {"2025", "2026", "2027"};
+        JComboBox<String> comboAno = new JComboBox<>(anos);
+        
+        datePanel.add(comboDia);
+        datePanel.add(new JLabel("/"));
+        datePanel.add(comboMes);
+        datePanel.add(new JLabel("/"));
+        datePanel.add(comboAno);
+        
+        form.add(datePanel, gbc);
         
         gbc.gridx = 0; gbc.gridy = 3; gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
         form.add(new JLabel("Horario:"), gbc);
@@ -564,19 +602,22 @@ private void showPetDialog() {
         JButton cancelBtn = makeButton("Cancelar", CINZA_NEUTRO);          okBtn.addActionListener(e -> {
             String cliente = (String) comboCliente.getSelectedItem();
             String petInfo = (String) comboPet.getSelectedItem();
-            String data = campoData.getText().trim();
+            String dia = (String) comboDia.getSelectedItem();
+            String mes = (String) comboMes.getSelectedItem();
+            String ano = (String) comboAno.getSelectedItem();
+            String data = dia + "/" + mes + "/" + ano;
             String horario = (String) comboHorario.getSelectedItem();
             String servico = (String) comboServico.getSelectedItem();
             
-            if (cliente == null || petInfo == null || data.isEmpty() || horario == null || servico == null) {
+            if (cliente == null || petInfo == null || horario == null || servico == null) {
                 JOptionPane.showMessageDialog(agendaDialog, "Preencha todos os campos!");
                 return;
             }
             
-            // Extrair nome do pet da string "NomePet (Proprietario)"
+            // pega so o nome sem o dono
             String pet = petInfo.split(" \\(")[0];
               tblAgenda.addRow(new Object[]{data, horario, cliente, pet, servico});
-            saveAllData(); // Salvar automaticamente
+            saveAllData(); // salva logo apos mudanca
             agendaDialog.dispose();
             JOptionPane.showMessageDialog(this, "Agendamento realizado com sucesso!");
         });
@@ -622,41 +663,41 @@ private void showPetDialog() {
         areaTexto.setEditable(false);        areaTexto.setFont(fntCustom);
         JScrollPane scroll = new JScrollPane(areaTexto);
         scroll.setPreferredSize(new Dimension(400, 300));
-          JOptionPane.showMessageDialog(this, scroll, "Relatorio do Sistema", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    // Metodos de validacao
+          JOptionPane.showMessageDialog(this, scroll, "Relatorio do Sistema", JOptionPane.INFORMATION_MESSAGE);    }    // checa se email tem formato correto
     private boolean isEmailValid(String email) {
         if (email == null || email.trim().isEmpty()) return false;
         String emailPattern = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(emailPattern);
     }
     
+    // telefone precisa ter 10 ou 11 numeros
     private boolean isTelefoneValid(String telefone) {
         if (telefone == null || telefone.trim().isEmpty()) return false;
         String cleanPhone = telefone.replaceAll("[\\s()\\-]", "");
         return cleanPhone.matches("^\\d{10,11}$");
     }
     
+    // nome tem que ter pelo menos 2 letras
     private boolean isNomeValid(String nome) {
         return nome != null && nome.trim().length() >= 2 && nome.matches("^[a-zA-ZÀ-ÿ\\s]+$");
     }
     
+    // pets vivem no maximo 120,
     private boolean isIdadeValid(String idade) {
         try {
             int idadeInt = Integer.parseInt(idade);
-            return idadeInt >= 0 && idadeInt <= 30;
+            return idadeInt >= 0 && idadeInt <= 120;// idade entre 0 e 120
         } catch (NumberFormatException e) {
             return false;
         }
-    }    private void deletarPet(JTable tabela) {
+    }private void deletarPet(JTable tabela) {
         int selectedRow = tabela.getSelectedRow();
-        
+        // verifica se tem pet selecionado
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Selecione um pet para deletar!");
             return;
         }
-        
+        // verifica se o pet tem dono
         String nomePet = tblPets.getValueAt(selectedRow, 1).toString();
         int confirm = JOptionPane.showConfirmDialog(this, 
             "Tem certeza que deseja deletar o pet '" + nomePet + "'?", 
@@ -664,11 +705,11 @@ private void showPetDialog() {
             JOptionPane.YES_NO_OPTION);
               if (confirm == JOptionPane.YES_OPTION) {
             tblPets.removeRow(selectedRow);
-            saveAllData(); // Salvar automaticamente
+            saveAllData(); // salva logo apos mudanca
             JOptionPane.showMessageDialog(this, "Pet deletado com sucesso!");
         }
     }
-    
+    //  Deletar cliente selecionado
     private void deletarCliente(JTable tabela) {
         int selectedRow = tabela.getSelectedRow();
         
@@ -676,7 +717,7 @@ private void showPetDialog() {
             JOptionPane.showMessageDialog(this, "Selecione um cliente para deletar!");
             return;
         }
-        
+        // Pega o nome do cliente selecionado
         String nomeCliente = tblClientes.getValueAt(selectedRow, 1).toString();
         
         // Verificar se cliente tem pets
@@ -699,11 +740,60 @@ private void showPetDialog() {
             JOptionPane.YES_NO_OPTION);
               if (confirm == JOptionPane.YES_OPTION) {
             tblClientes.removeRow(selectedRow);
-            saveAllData(); // Salvar automaticamente
+            saveAllData(); // salva logo apos mudanca
             JOptionPane.showMessageDialog(this, "Cliente deletado com sucesso!");
         }
     }
     
+    // Deletar venda selecionada
+    private void deletarVenda(JTable tabela) {
+        int selectedRow = tabela.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione uma venda para deletar!");
+            return;
+        }
+        
+        String idVenda = tblVendas.getValueAt(selectedRow, 0).toString();
+        String cliente = tblVendas.getValueAt(selectedRow, 2).toString();
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Deletar venda " + idVenda + " do cliente " + cliente + "?", 
+            "Confirmar Exclusao", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            tblVendas.removeRow(selectedRow);
+            saveAllData();
+            JOptionPane.showMessageDialog(this, "Venda removida!");
+        }
+    }
+    
+    // Cancelar agendamento
+    private void deletarAgendamento(JTable tabela) {
+        int selectedRow = tabela.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Selecione um agendamento para cancelar!");
+            return;
+        }
+        
+        String data = tblAgenda.getValueAt(selectedRow, 0).toString();
+        String cliente = tblAgenda.getValueAt(selectedRow, 2).toString();
+        String pet = tblAgenda.getValueAt(selectedRow, 3).toString();
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+            "Cancelar agendamento de " + pet + " (" + cliente + ") para " + data + "?", 
+            "Confirmar Cancelamento", 
+            JOptionPane.YES_NO_OPTION);
+            
+        if (confirm == JOptionPane.YES_OPTION) {
+            tblAgenda.removeRow(selectedRow);
+            saveAllData();
+            JOptionPane.showMessageDialog(this, "Agendamento cancelado!");
+        }
+    }
+
     // Carregar todos os dados
     private void loadAllData() {
         DataPersistence.loadClientes(tblClientes);

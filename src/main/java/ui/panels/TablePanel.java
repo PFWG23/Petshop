@@ -9,7 +9,8 @@ import javax.swing.table.DefaultTableModel;
 import ui.components.ButtonUtils;
 
 public class TablePanel {
-    
+    // Cria o painel de tabela de pets
+    // Recebe fontes, cores e funções de getter/setter para o modelo de tabela
     public JPanel buildPetTable(Font fntBold, Font fntCustom, Color azulMain, Color crCinza,
                                 Supplier<DefaultTableModel> getter, Consumer<DefaultTableModel> setter, Runnable showDialog) {
         JPanel petPanel = new JPanel(new BorderLayout());
@@ -44,7 +45,7 @@ public class TablePanel {
         petPanel.add(btnAdicionarPet, BorderLayout.SOUTH);
         return petPanel;
     }
-    
+    // Cria o painel de tabela de clientes 
     public JPanel buildClientTable(Font fntBold, Font fntCustom, Color azulMain, Color crCinza,
                                    Supplier<DefaultTableModel> getter, Consumer<DefaultTableModel> setter, Runnable showDialog) {
         JPanel clientPanel = new JPanel(new BorderLayout());
@@ -57,7 +58,8 @@ public class TablePanel {
           String[] colunasCliente = {"ID", "Nome Completo", "Telefone", "Email"};
         DefaultTableModel tblClientes = new DefaultTableModel(colunasCliente, 0);
         setter.accept(tblClientes);
-        
+        // Dados de exemplo para a tabela de clientes
+        // Em uma aplicação real, esses dados viriam de um banco de dados ou arquivo
         String[][] dadosClientes = {
             {"C001", "Roberta Machado", "(11) 97654-3210", "roberta.m@email.com"},
             {"C002", "Carlos Eduardo Santos", "(11) 98765-4321", "carlosE@hotmail.com"},
@@ -70,7 +72,8 @@ public class TablePanel {
         for (String[] cliente : dadosClientes) {
             tblClientes.addRow(cliente);
         }
-        
+        //  Cria a tabela de clientes com os dados
+        //  Define o modelo de tabela e configura o estilo
         JTable tabelaClientes = new JTable(tblClientes);
         setupTableStyle(tabelaClientes, fntCustom, fntBold, crCinza, azulMain);
         JScrollPane scrollClientes = new JScrollPane(tabelaClientes);
@@ -80,7 +83,8 @@ public class TablePanel {
           clientPanel.add(btnNovoCliente, BorderLayout.SOUTH);
         return clientPanel;
     }
-    
+    // Cria o painel de tabela de vendas
+    // Recebe fontes, cores e funções de getter/setter para o modelo de tabela
     public JPanel buildSalesTable(Font fntBold, Font fntCustom, Color azulMain, Color crCinza,
                                   Supplier<DefaultTableModel> getter, Consumer<DefaultTableModel> setter, Runnable showDialog) {
         JPanel salesPanel = new JPanel(new BorderLayout());
@@ -93,7 +97,6 @@ public class TablePanel {
         String[] colunasVenda = {"ID", "Data", "Cliente", "Servico", "Valor"};
          DefaultTableModel tblVendas = new DefaultTableModel(colunasVenda, 0);
          setter.accept(tblVendas);
-         
           String[][] dadosVendas = {
             {"V001", "18/06/2025", "Roberta Machado", "Banho Completo", "R$ 85,00"},
             {"V002", "19/06/2025", "Carlos Eduardo Santos", "Consulta + Vacina", "R$ 120,00"},
@@ -103,7 +106,8 @@ public class TablePanel {
         for (String[] venda : dadosVendas) {
             tblVendas.addRow(venda);
         }
-        
+        // Cria a tabela de vendas com os dados
+        // Define o modelo de tabela e configura o estilo
         JTable tabelaVendas = new JTable(tblVendas);
         setupTableStyle(tabelaVendas, fntCustom, fntBold, crCinza, azulMain);
         JScrollPane scrollVendas = new JScrollPane(tabelaVendas);
@@ -114,7 +118,7 @@ public class TablePanel {
         
         return salesPanel;
     }
-    
+    // Cria o painel de tabela de agendamentos
     public JPanel buildScheduleTable(Font fntBold, Font fntCustom, Color azulMain, Color crCinza,
                                      Supplier<DefaultTableModel> getter, Consumer<DefaultTableModel> setter, Runnable showDialog) {
       JPanel scheduleContainer = new JPanel(new BorderLayout());
@@ -123,11 +127,12 @@ public class TablePanel {
        scheduleBorder.setTitleFont(fntBold.deriveFont(14f));
        scheduleBorder.setTitleColor(azulMain);
        scheduleContainer.setBorder(scheduleBorder);
-       
+       // Define as colunas da tabela de agendamentos
+       // Recebe fontes, cores e funções de getter/setter para o modelo de tabela
        String[] colunasAgenda = {"Data", "Hora", "Cliente", "Pet", "Servico"};
        DefaultTableModel tblAgenda = new DefaultTableModel(colunasAgenda, 0);
        setter.accept(tblAgenda);
-       
+         // Dados de exemplo para a tabela de agendamentos
         String[][] dadosAgenda = {
             {"24/06/2025", "08:30", "Roberta Machado", "Bartolomeu", "Check-up"},
             {"24/06/2025", "15:00", "Carlos Eduardo Santos", "Fifi", "Vacinacao"},
@@ -138,7 +143,8 @@ public class TablePanel {
         for (String[] agendamento : dadosAgenda) {
             tblAgenda.addRow(agendamento);
         }
-        
+        // Cria a tabela de agendamentos com os dados
+        // Define o modelo de tabela e configura o estilo
         JTable tabelaAgenda = new JTable(tblAgenda);
         setupTableStyle(tabelaAgenda, fntCustom, fntBold, crCinza, azulMain);
         JScrollPane scrollAgenda = new JScrollPane(tabelaAgenda);
@@ -148,7 +154,8 @@ public class TablePanel {
         scheduleContainer.add(btnAgendar, BorderLayout.SOUTH);
         return scheduleContainer;
     }
-    
+    // Configura o estilo da tabela
+    // Define altura das linhas, fontes, cores do cabeçalho e fundo de seleção
     private void setupTableStyle(JTable table, Font fntCustom, Font fntBold, Color crCinza, Color azulMain) {
         table.setRowHeight(25);
         table.setFont(fntCustom);
