@@ -1,8 +1,8 @@
 @echo off
 cd /d "c:\Users\patri\Desktop\Petshop"
 
-echo Compilando projeto PetShop...
-javac -d build -cp src\main\java src\main\java\launcher\*.java src\main\java\ui\main\*.java src\main\java\ui\panels\*.java src\main\java\ui\dialogs\*.java src\main\java\ui\components\*.java
+echo Compilando PetShop Manager...
+javac -d build -cp src\main\java src\main\java\util\*.java src\main\java\ui\swing\*.java
 
 if %errorlevel% neq 0 (
     echo Erro na compilacao!
@@ -11,6 +11,6 @@ if %errorlevel% neq 0 (
 )
 
 echo Executando PetShop Manager...
-java -cp build launcher.PetShopApp
+java -cp build ui.swing.SistemaPetShopUI
 
 pause
